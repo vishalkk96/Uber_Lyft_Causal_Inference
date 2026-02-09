@@ -59,8 +59,12 @@ Uber wait duration and Lyft wait duration are used to predict the Uber fare, Lyf
 
 The errors from each fare model are used to build a linear regression model predicting the error in the Lyft share
 
-Uber Fare Causal Impact on Lyft's market share :  0.4\%
-Lyft Fare Causal Impact on Lyft's market share : -1.2\%
+Uber Fare (ATE) on Lyft's market share :  0.4\%
+Lyft Fare (ATE) on Lyft's market share : -1.2\%
+
+![](Images/Causal_ATE.png)
+
+Regression Summary
 
 ![](Images/Regression.png)
 
