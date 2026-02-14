@@ -45,7 +45,11 @@ The following metrics were defined and calculated (grouped by origin, destinatio
 
 ### Causal Discovery
 
-For both Uber and Lyft, the causal inference links between fare per mile, pay per mile and wait duration are identified using conditional independence testing. Both wait durations and fare per miles are causally linked to the lyft share since all four factors are visible to the end customer
+For both Uber and Lyft, the causal inference links between fare per mile, pay per mile and wait duration are identified using conditional independence testing.
+
+![](Images/Correlation.png)
+
+Both wait durations and fare per miles are causally linked to the lyft share since all four factors are visible to the end customer
 
 ![](Images/Model.png)`
 
