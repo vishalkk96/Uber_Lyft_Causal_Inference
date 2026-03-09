@@ -25,46 +25,99 @@ warnings.filterwarnings('ignore')
 
 
 def data_prep(mode: str):
-    uber_rts_df = pd.read_parquet(mode + '/Uber_Routes_Data.parquet')
-    uber_rts_df = uber_rts_df.drop(columns = 'service')
-    uber_rts_df.columns = ['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'uber_vol', 'uber_trip_dist','uber_mph', 'uber_trip_dur', 'uber_wait_dur'
-                            , 'uber_med_wait_dur', 'uber_wait_ratio', 'uber_med_wait_ratio', 'uber_fare_per_mile', 'uber_pay_per_mile', 'uber_adj_pay_per_mile', 'uber_fare_per_min'
-                            , 'uber_pay_ratio', 'uber_med_pay_ratio_pay_per_min', 'uber_rev_pos', 'uber_rev_per_mile', 'uber_rev_per_min', 'uber_med_pay_ratio', 'uber_pay_per_min']
+    if mode == 'Train':
+        uber_rts_df = pd.read_parquet(mode + '/Uber_Routes_Data.parquet')
+        uber_rts_df = uber_rts_df.drop(columns = 'service')
+        uber_rts_df = uber_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'volume', 'trip_dist'
+                                   , 'miles_per_hr', 'trip_dur', 'wait_dur', 'wait_ratio', 'fare_per_mile', 'adj_pay_per_mile']]
+        uber_rts_df.columns = ['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'uber_vol', 'uber_trip_dist'
+                                , 'uber_mph', 'uber_trip_dur', 'uber_wait_dur', 'uber_wait_ratio', 'uber_fare_per_mile', 'uber_pay_per_mile']
 
-    uber_rts_df = uber_rts_df.loc[(uber_rts_df['day_of_week'] < 4) & (uber_rts_df['time_of_day'].isin([2, 4]))].reset_index(drop = True)
-    
-    lyft_rts_df = pd.read_parquet(mode + '/Lyft_Routes_Data.parquet')
-    lyft_rts_df = lyft_rts_df.drop(columns = 'service')
+        uber_rts_df = uber_rts_df.loc[(uber_rts_df['day_of_week'] < 4) & (uber_rts_df['time_of_day'].isin([2, 4]))].reset_index(drop = True)
+        
+        lyft_rts_df = pd.read_parquet(mode + '/Lyft_Routes_Data.parquet')
+        lyft_rts_df = lyft_rts_df.drop(columns = 'service')
+        lyft_rts_df = lyft_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'volume', 'trip_dist'
+                                   , 'miles_per_hr', 'trip_dur', 'wait_dur', 'wait_ratio', 'fare_per_mile', 'adj_pay_per_mile']]
+        lyft_rts_df.columns = ['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'lyft_vol', 'lyft_trip_dist'
+                                , 'lyft_mph', 'lyft_trip_dur', 'lyft_wait_dur', 'lyft_wait_ratio', 'lyft_fare_per_mile', 'lyft_pay_per_mile']
 
-    lyft_rts_df.columns = ['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'lyft_vol', 'lyft_trip_dist','lyft_mph', 'lyft_trip_dur', 'lyft_wait_dur'
-                            , 'lyft_med_wait_dur', 'lyft_wait_ratio', 'lyft_med_wait_ratio', 'lyft_fare_per_mile', 'lyft_pay_per_mile', 'lyft_adj_pay_per_mile', 'lyft_fare_per_min'
-                            , 'lyft_pay_ratio', 'lyft_med_pay_ratio_pay_per_min', 'lyft_rev_pos', 'lyft_rev_per_mile', 'lyft_rev_per_min', 'lyft_med_pay_ratio', 'lyft_pay_per_min']
-
-    lyft_rts_df = lyft_rts_df.loc[(lyft_rts_df['day_of_week'] < 4) & (lyft_rts_df['time_of_day'].isin([2, 4]))].reset_index(drop = True)
-    
-    vol_rts_df = pd.merge(uber_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'uber_vol', 'uber_wait_ratio', 'uber_pay_ratio'
-            , 'uber_fare_per_mile', 'uber_pay_per_mile','uber_adj_pay_per_mile', 'uber_rev_pos', 'uber_rev_per_mile', 'uber_trip_dur', 'uber_wait_dur']]
-            , lyft_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'lyft_vol', 'lyft_wait_ratio', 'lyft_pay_ratio'
-            , 'lyft_fare_per_mile', 'lyft_pay_per_mile', 'lyft_adj_pay_per_mile', 'lyft_rev_pos', 'lyft_rev_per_mile', 'lyft_trip_dur', 'lyft_wait_dur']], how = 'inner')
+        lyft_rts_df = lyft_rts_df.loc[(lyft_rts_df['day_of_week'] < 4) & (lyft_rts_df['time_of_day'].isin([2, 4]))].reset_index(drop = True)
+        
+        vol_rts_df = pd.merge(uber_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'uber_vol', 'uber_trip_dist'
+                                , 'uber_mph', 'uber_trip_dur', 'uber_wait_dur', 'uber_wait_ratio', 'uber_fare_per_mile', 'uber_pay_per_mile']]
+                , lyft_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'lyft_vol', 'lyft_trip_dist'
+                                , 'lyft_mph', 'lyft_trip_dur', 'lyft_wait_dur', 'lyft_wait_ratio', 'lyft_fare_per_mile', 'lyft_pay_per_mile']], how = 'inner')
 
 
-    vol_rts_df['uber_vol'] = vol_rts_df['uber_vol'].fillna(0)
+        vol_rts_df['uber_vol'] = vol_rts_df['uber_vol'].fillna(0)
 
-    vol_rts_df['lyft_vol'] = vol_rts_df['lyft_vol'].fillna(0)
+        vol_rts_df['lyft_vol'] = vol_rts_df['lyft_vol'].fillna(0)
 
-    vol_rts_df['tot_vol'] = vol_rts_df['uber_vol'] + vol_rts_df['lyft_vol']
+        vol_rts_df['tot_vol'] = vol_rts_df['uber_vol'] + vol_rts_df['lyft_vol']
 
-    vol_rts_df = vol_rts_df.loc[(vol_rts_df['uber_vol'] > 10) & (vol_rts_df['lyft_vol'] > 10)].reset_index(drop = True)
+        vol_rts_df = vol_rts_df.loc[(vol_rts_df['uber_vol'] > 10) & (vol_rts_df['lyft_vol'] > 10)].reset_index(drop = True)
 
-    vol_rts_df['uber_pay'] = vol_rts_df['uber_pay_per_mile']
-    vol_rts_df['uber_fare'] = vol_rts_df['uber_fare_per_mile']
-    vol_rts_df['lyft_pay'] = vol_rts_df['lyft_pay_per_mile']
-    vol_rts_df['lyft_fare'] = vol_rts_df['lyft_fare_per_mile']
-    vol_rts_df['uber_wait'] = vol_rts_df['uber_wait_ratio']
-    vol_rts_df['lyft_wait'] = vol_rts_df['lyft_wait_ratio']
+        vol_rts_df['uber_pay'] = vol_rts_df['uber_pay_per_mile']
+        vol_rts_df['uber_fare'] = vol_rts_df['uber_fare_per_mile']
+        vol_rts_df['lyft_pay'] = vol_rts_df['lyft_pay_per_mile']
+        vol_rts_df['lyft_fare'] = vol_rts_df['lyft_fare_per_mile']
+        vol_rts_df['uber_wait'] = vol_rts_df['uber_wait_dur']
+        vol_rts_df['lyft_wait'] = vol_rts_df['lyft_wait_dur']
 
-    vol_rts_df['tot_vol'] = vol_rts_df['uber_vol'] + vol_rts_df['lyft_vol']
-    vol_rts_df['lyft_share'] = vol_rts_df['lyft_vol'] / vol_rts_df['tot_vol']
+        vol_rts_df['tot_vol'] = vol_rts_df['uber_vol'] + vol_rts_df['lyft_vol']
+        vol_rts_df['lyft_share'] = vol_rts_df['lyft_vol'] / vol_rts_df['tot_vol']
+
+        vol_rts_df['date_of_trip'] = pd.to_datetime(vol_rts_df['date_of_trip'])
+        vol_rts_df['month_of_trip'] = vol_rts_df['date_of_trip'].dt.strftime('%Y-%m')
+        vol_rts_df['sunday_date'] = vol_rts_df['date_of_trip'] - pd.to_timedelta((vol_rts_df['date_of_trip'].dt.dayofweek + 2) % 7, unit='D')
+    else:
+        uber_rts_df = pd.read_parquet(mode + '/Uber_Routes_Data.parquet')
+        uber_rts_df = uber_rts_df.drop(columns = 'service')
+        uber_rts_df = uber_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'volume', 'trip_dist'
+                                   , 'miles_per_hr', 'trip_dur', 'wait_dur', 'wait_ratio', 'fare_per_mile', 'cong_fee_per_mile', 'adj_pay_per_mile']]
+        uber_rts_df.columns = ['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'uber_vol', 'uber_trip_dist'
+                                , 'uber_mph', 'uber_trip_dur', 'uber_wait_dur', 'uber_wait_ratio', 'uber_fare_per_mile', 'uber_cong_fee_per_mile', 'uber_pay_per_mile']
+                                   
+        uber_rts_df = uber_rts_df.loc[(uber_rts_df['day_of_week'] < 4) & (uber_rts_df['time_of_day'].isin([2, 4]))].reset_index(drop = True)
+        
+        lyft_rts_df = pd.read_parquet(mode + '/Lyft_Routes_Data.parquet')
+        lyft_rts_df = lyft_rts_df.drop(columns = 'service')
+
+        lyft_rts_df = lyft_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'volume', 'trip_dist'
+                                   , 'miles_per_hr', 'trip_dur', 'wait_dur', 'wait_ratio', 'fare_per_mile', 'cong_fee_per_mile', 'adj_pay_per_mile']]
+        lyft_rts_df.columns = ['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'lyft_vol', 'lyft_trip_dist'
+                                , 'lyft_mph', 'lyft_trip_dur', 'lyft_wait_dur', 'lyft_wait_ratio', 'lyft_fare_per_mile', 'lyft_cong_fee_per_mile', 'lyft_pay_per_mile']
+
+        lyft_rts_df = lyft_rts_df.loc[(lyft_rts_df['day_of_week'] < 4) & (lyft_rts_df['time_of_day'].isin([2, 4]))].reset_index(drop = True)
+        
+        vol_rts_df = pd.merge(uber_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'uber_vol', 'uber_trip_dist'
+                                , 'uber_mph', 'uber_trip_dur', 'uber_wait_dur', 'uber_wait_ratio', 'uber_fare_per_mile', 'uber_cong_fee_per_mile', 'uber_pay_per_mile']]
+                , lyft_rts_df[['date_of_trip', 'day_of_week', 'time_of_day', 'PULocationID', 'DOLocationID', 'lyft_vol', 'lyft_trip_dist'
+                                , 'lyft_mph', 'lyft_trip_dur', 'lyft_wait_dur', 'lyft_wait_ratio', 'lyft_fare_per_mile', 'lyft_cong_fee_per_mile', 'lyft_pay_per_mile']], how = 'inner')
+
+
+        vol_rts_df['uber_vol'] = vol_rts_df['uber_vol'].fillna(0)
+
+        vol_rts_df['lyft_vol'] = vol_rts_df['lyft_vol'].fillna(0)
+
+        vol_rts_df['tot_vol'] = vol_rts_df['uber_vol'] + vol_rts_df['lyft_vol']
+
+        vol_rts_df = vol_rts_df.loc[(vol_rts_df['uber_vol'] > 10) & (vol_rts_df['lyft_vol'] > 10)].reset_index(drop = True)
+
+        vol_rts_df['uber_pay'] = vol_rts_df['uber_pay_per_mile']
+        vol_rts_df['uber_fare'] = vol_rts_df['uber_fare_per_mile']
+        vol_rts_df['lyft_pay'] = vol_rts_df['lyft_pay_per_mile']
+        vol_rts_df['lyft_fare'] = vol_rts_df['lyft_fare_per_mile']
+        vol_rts_df['uber_wait'] = vol_rts_df['uber_wait_dur']
+        vol_rts_df['lyft_wait'] = vol_rts_df['lyft_wait_dur']
+
+        vol_rts_df['tot_vol'] = vol_rts_df['uber_vol'] + vol_rts_df['lyft_vol']
+        vol_rts_df['lyft_share'] = vol_rts_df['lyft_vol'] / vol_rts_df['tot_vol']
+
+        vol_rts_df['date_of_trip'] = pd.to_datetime(vol_rts_df['date_of_trip'])
+        vol_rts_df['month_of_trip'] = vol_rts_df['date_of_trip'].dt.strftime('%Y-%m')
+        vol_rts_df['sunday_date'] = vol_rts_df['date_of_trip'] - pd.to_timedelta((vol_rts_df['date_of_trip'].dt.dayofweek + 2) % 7, unit='D')
 
     return vol_rts_df
 
@@ -421,8 +474,8 @@ def xgb_coeffs(
     predictor_cols: List[str],
     target_col: str,
     learning_rate: float = 0.1,
-    max_depth: int = 6,
-    n_estimators: int = 200,
+    max_depth: float = 6,
+    n_estimators: float = 200,
     booster: str = "gbtree",
     objective: str = "reg:squarederror",  # squared error
     random_state: int = 42,
@@ -642,7 +695,36 @@ def xgb_predictor(df, objective, predictor_cols, target_col, new_col,
 
     df[new_col] = model.predict(X)
 
-    return df, model
+    # Model summary report
+    y_pred = df[new_col]
+    mae = mean_absolute_error(y, y_pred)
+    rmse = np.sqrt(mean_squared_error(y, y_pred))
+    r2 = r2_score(y, y_pred)
+
+    report = {
+        "objective": objective,
+        "target": target_col,
+        "predictors": predictor_cols,
+        "n_estimators": model.n_estimators,
+        "max_depth": model.max_depth,
+        "learning_rate": model.learning_rate,
+        "n_obs": len(y),
+        "MAE": round(float(mae), 4),
+        "RMSE": round(float(rmse), 4),
+        "R2": round(float(r2), 4),
+        "feature_importances": {k: round(float(v), 4) for k, v in zip(predictor_cols, model.feature_importances_)}
+    }
+
+    row = {
+        "Target": target_col,
+        "Objective": objective,
+        "RMSE": report["RMSE"],
+        "R2": report["R2"],
+        **{f"feat_imp_{k}": v for k, v in report["feature_importances"].items()}
+    }
+
+
+    return df, pd.DataFrame([row]), model
 
 def lin_regression(
     df,

@@ -2,7 +2,7 @@
 
 ## 📊 Executive Summary
 
-This project uses double machine learning to estimate the ATE of increasing the fare per mile for both Uber and Lyft on the eventual market share. The finding suggests that Lyft loses three times the market share that Uber loses for every increase in fare per mile on average. Data will be made available upon request
+This project estimates the change in market share of Uber and Lyft because of the congestion fee introduced in NYC. This project uses double machine learning to estimate the ATE of increasing the fare per mile for both Uber and Lyft on the eventual market share. The finding suggests that Lyft loses three times the market share that Uber loses for every increase in fare per mile on average. Data will be made available upon request
 
 ## 🎯 Introduction and Scope
 
@@ -65,27 +65,29 @@ XGBoost models are used after hyperparameter tuning for each nuisance model
 
 The errors from each fare model are used to build a linear regression model predicting the error in the Lyft share
 
-Uber Fare (ATE) on Lyft's market share :  0.4\%
-Lyft Fare (ATE) on Lyft's market share : -1.2\%
+Uber Fare (ATE) on Lyft's market share :  0.8\%
+Lyft Fare (ATE) on Lyft's market share : -2.7\%
 
 ![](Images/Causal_ATE.png)
 
-Regression Summary
+Uber and Lyft ATE Orthogonal Regression Summary (Aggregated on days)
 
 ![](Images/Regression.png)
 
-### Causal Inference (DML) using train/test split
+### Causal Inference to predict the Lyft market share change because of congestion fee
+
+The congestion fee adds to the customer fare. To incorporate it into the model, the congestion fee per mile is calculated and added to the fare per mile
 
 #### Training model
 
 The nuisance functions and regression model are trained on the 2024 data
 
-#### Testing algorithm
+#### Market share difference (2025)
 
-The baseline of Uber fare per mile, Lyft fare per mile and Lyft market share are determined using the nuisance functions
-
-The regression model uses the delta on top of the metrics to predict the outcome of market share
+Market share is calculated for the 2025 routes which do not have the congestion fee. The market share for congestion fee routes in 2025 is calculated using the ATE calculated in the previous step and the average congestion fee per mile (for both Uber and Lyft).
 
 #### Goodness of fit
 
-The final RMSE is 0.7% with an R2 value of 0.034
+The calculated congestion fee routes market share is compared to the actual congestion fee routes market share
+
+![](Images/Causal_Results.png)
