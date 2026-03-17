@@ -1,4 +1,4 @@
-# 🚕 Impact of congestion pricing on Uber vs Lyft marketshare (Causal Inference)
+# 🚕 Congestion pricing on Uber vs Lyft marketshare (Causal Inference)
 
 ## 📊 Executive Summary
 
